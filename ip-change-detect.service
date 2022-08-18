@@ -1,0 +1,10 @@
+[Unit]
+Description=Detects if IP with global scope is obtained
+Wants=network.target
+After=network-online.target
+
+[Service]
+ExecStart=:/usr/bin/sh -c "ip monitor address | sed -nu 's/^[[:digit:]]\+:.*scope global/\0/p' | while read i; do /usr/local/bin/autizone; done"
+
+[Install]
+WantedBy=multi-user.target default.target

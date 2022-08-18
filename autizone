@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -e
+
+detected_timezone=$(curl -Ls --fail https://ipapi.co/timezone || true)
+
+if [ -n "${detected_timezone}" ]; then
+    current_timezone=$(timedatectl show --property=Timezone | cut -d"=" -f2)
+    if [ "${detected_timezone}" != "${current_timezone}" ]; then
+        timedatectl set-timezone $detected_timezone
+        echo "new timezone: ${detected_timezone}"
+    fi
+fi
